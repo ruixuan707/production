@@ -30,6 +30,11 @@ public class Dictionary extends BaseEntity<Long> {
     private String keyValue;
 
     /**
+     * 设置key地址
+     */
+    private String keyAddress;
+
+    /**
      * 关键字
      */
     private String keyWord;

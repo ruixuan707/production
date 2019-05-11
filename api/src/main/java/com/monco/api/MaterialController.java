@@ -1,19 +1,12 @@
 package com.monco.api;
 
-import cn.afterturn.easypoi.excel.ExcelImportUtil;
-import cn.afterturn.easypoi.excel.entity.ImportParams;
-import cn.afterturn.easypoi.excel.entity.result.ExcelImportResult;
 import com.monco.common.bean.ApiResult;
-import com.monco.common.bean.CommonUtils;
 import com.monco.common.bean.ConstantUtils;
-import com.monco.core.entity.Dictionary;
 import com.monco.core.entity.Material;
-import com.monco.core.page.FileImportPage;
 import com.monco.core.query.MatchType;
 import com.monco.core.query.OrderQuery;
 import com.monco.core.query.QueryParam;
 import com.monco.core.service.MaterialService;
-import com.monco.core.service.common.FastFileStorageService;
 import com.monco.utils.ExcelUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -21,13 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,9 +34,6 @@ public class MaterialController {
     @Autowired
     MaterialService materialService;
 
-    @Autowired
-    FastFileStorageService fastFileStorageService;
-
     /**
      * 保存材料表
      *
@@ -55,6 +42,9 @@ public class MaterialController {
      */
     @PostMapping
     public ApiResult save(@RequestBody Material material) {
+        if (material.getNumber() == null) {
+            material.setNumber(0L);
+        }
         materialService.save(material);
         return ApiResult.ok();
     }
@@ -101,9 +91,19 @@ public class MaterialController {
         List<QueryParam> params = new ArrayList<>();
         QueryParam queryParam = new QueryParam("dataDelete", MatchType.equal, ConstantUtils.UN_DELETE);
         params.add(queryParam);
-        // 记录类型
-        if (StringUtils.isNotBlank(material.getMaterialType())) {
-            queryParam.setFiled("materialType").setMatchType(MatchType.equal).setValue(material.getMaterialType());
+        // 材料等级
+        if (StringUtils.isNotBlank(material.getMaterialLevel())) {
+            queryParam.setFiled("materialLevel").setMatchType(MatchType.equal).setValue(material.getMaterialLevel());
+            params.add(queryParam);
+        }
+        // 材料名称
+        if (StringUtils.isNotBlank(material.getMaterialName())) {
+            queryParam.setFiled("materialName").setMatchType(MatchType.equal).setValue(material.getMaterialName());
+            params.add(queryParam);
+        }
+        // 材料规格
+        if (StringUtils.isNotBlank(material.getMaterialNorms())) {
+            queryParam.setFiled("materialNorms").setMatchType(MatchType.equal).setValue(material.getMaterialNorms());
             params.add(queryParam);
         }
         Page<Material> result = materialService.findPage(pageSize, currentPage, params, orderQuery.getOrderType(), orderQuery.getOrderField());
@@ -148,7 +148,6 @@ public class MaterialController {
     @PostMapping("import")
     public ApiResult importExcel(@RequestParam MultipartFile multipartFile) {
         List<Material> materialList = ExcelUtils.importExcel(multipartFile, ConstantUtils.NUM_1, ConstantUtils.NUM_1, Material.class);
-        log.info(materialList.get(0).getBusiness());
         return ApiResult.ok();
     }
 }

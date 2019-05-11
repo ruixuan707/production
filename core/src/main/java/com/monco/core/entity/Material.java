@@ -31,14 +31,14 @@ public class Material extends BaseEntity<Long> {
     /**
      * 材料类型
      */
-    @Excel(name = "材料类型", orderNum = "2")
-    private String materialType;
+    @Excel(name = "材料等级", orderNum = "2")
+    private String materialLevel;
 
     /**
-     * 数量
+     * 材料规格
      */
-    @Excel(name = "数量", orderNum = "3")
-    private Long number;
+    @Excel(name = "材料规格", orderNum = "3")
+    private String materialNorms;
 
     /**
      * 单价
@@ -47,14 +47,14 @@ public class Material extends BaseEntity<Long> {
     private BigDecimal price;
 
     /**
-     * 商家
+     * 图片
      */
-    @Excel(name = "商家", orderNum = "5")
-    private String business;
+    @Excel(name = "图片", orderNum = "5")
+    private String pic;
 
     /**
-     * 采购日期
+     * 库存数量
      */
-    @Excel(name = "采购日期", databaseFormat = "yyyyMMdd", format = "yyyy-MM-dd", orderNum = "6")
-    private Date purchaseDate;
+    @Excel(name = "数量", orderNum = "6")
+    private Long number;
 }
