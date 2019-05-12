@@ -33,7 +33,12 @@ public class MaterialOrder extends BaseEntity<Long> {
     /**
      * 材料类型
      */
-    private String materialType;
+    private String materialLevel;
+
+    /**
+     * 材料规格
+     */
+    private String materialNorms;
 
     /**
      * 单价

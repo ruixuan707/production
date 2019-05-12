@@ -87,9 +87,14 @@ public class DictionaryController {
         List<QueryParam> params = new ArrayList<>();
         QueryParam queryParam = new QueryParam("dataDelete", MatchType.equal, ConstantUtils.UN_DELETE);
         params.add(queryParam);
-        // 记录类型
+        // keyWord
         if (StringUtils.isNotBlank(dictionary.getKeyWord())) {
             queryParam.setFiled("keyWord").setMatchType(MatchType.equal).setValue(dictionary.getKeyWord());
+            params.add(queryParam);
+        }
+        // keyValue
+        if (StringUtils.isNotBlank(dictionary.getKeyValue())) {
+            queryParam.setFiled("keyValue").setMatchType(MatchType.like).setValue(dictionary.getKeyValue());
             params.add(queryParam);
         }
         Page<Dictionary> result = dictionaryService.findPage(pageSize, currentPage, params, orderQuery.getOrderType(), orderQuery.getOrderField());

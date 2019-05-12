@@ -57,4 +57,6 @@ public class Material extends BaseEntity<Long> {
      */
     @Excel(name = "数量", orderNum = "6")
     private Long number;
+
+
 }

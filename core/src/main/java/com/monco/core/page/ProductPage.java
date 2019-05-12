@@ -1,20 +1,18 @@
-package com.monco.core.entity;
+package com.monco.core.page;
 
-import cn.afterturn.easypoi.excel.annotation.Excel;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
 import java.math.BigDecimal;
 
-@Entity
-@Getter
-@Setter
-@Table(name = "sys_product")
-public class Product extends BaseEntity<Long> {
+/**
+ * @Auther: monco
+ * @Date: 2019/5/12 21:45
+ * @Description:
+ */
+@Data
+public class ProductPage extends BasePage {
 
-    private static final long serialVersionUID = 2785016245334194212L;
+    private static final long serialVersionUID = 6047115847278129170L;
 
     /**
      * 产品名称
@@ -54,11 +52,10 @@ public class Product extends BaseEntity<Long> {
     /**
      * 绑定工序
      */
-    private String procedureIds;
+    private Long[] procedure;
 
     /**
      * 工序步骤
      */
     private Integer procedureStep;
-
 }

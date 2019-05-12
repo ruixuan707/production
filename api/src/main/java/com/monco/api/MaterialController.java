@@ -88,6 +88,13 @@ public class MaterialController {
     public ApiResult list(@RequestParam(value = "currentPage", defaultValue = "1") Integer currentPage,
                           @RequestParam(value = "pageSize", defaultValue = "20") Integer pageSize,
                           Material material, OrderQuery orderQuery) {
+        if (pageSize == 0) {
+            Material validate = new Material();
+            validate.setDataDelete(ConstantUtils.UN_DELETE);
+            Example<Material> materialExample = Example.of(validate);
+            List<Material> materialList = materialService.findAll(materialExample, Sort.by("id"));
+            return ApiResult.ok(materialList);
+        }
         List<QueryParam> params = new ArrayList<>();
         QueryParam queryParam = new QueryParam("dataDelete", MatchType.equal, ConstantUtils.UN_DELETE);
         params.add(queryParam);
@@ -98,12 +105,12 @@ public class MaterialController {
         }
         // 材料名称
         if (StringUtils.isNotBlank(material.getMaterialName())) {
-            queryParam.setFiled("materialName").setMatchType(MatchType.equal).setValue(material.getMaterialName());
+            queryParam.setFiled("materialName").setMatchType(MatchType.like).setValue(material.getMaterialName());
             params.add(queryParam);
         }
         // 材料规格
         if (StringUtils.isNotBlank(material.getMaterialNorms())) {
-            queryParam.setFiled("materialNorms").setMatchType(MatchType.equal).setValue(material.getMaterialNorms());
+            queryParam.setFiled("materialNorms").setMatchType(MatchType.like).setValue(material.getMaterialNorms());
             params.add(queryParam);
         }
         Page<Material> result = materialService.findPage(pageSize, currentPage, params, orderQuery.getOrderType(), orderQuery.getOrderField());

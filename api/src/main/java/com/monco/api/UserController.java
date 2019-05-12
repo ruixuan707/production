@@ -80,7 +80,7 @@ public class UserController {
     }
 
     @GetMapping("list")
-    public ApiResult list(@RequestParam(value = "currentPage", defaultValue = "0") Integer currentPage,
+    public ApiResult list(@RequestParam(value = "currentPage", defaultValue = "1") Integer currentPage,
                           @RequestParam(value = "pageSize", defaultValue = "20") Integer pageSize,
                           User user, OrderQuery orderQuery) {
         Page<User> result = userService.getUserList(OrderQuery.getQuery(orderQuery, currentPage, pageSize), user);

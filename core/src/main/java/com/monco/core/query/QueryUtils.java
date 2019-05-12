@@ -64,9 +64,9 @@ public class QueryUtils {
             Set<String> keySet = directions.keySet();
             for (String direction : keySet) {
                 String[] strings = directions.get(direction);
-                Direction directionType = Direction.ASC;
-                if (Direction.DESC.equals(direction)) {
-                    directionType = Direction.DESC;
+                Direction directionType = Direction.DESC;
+                if (Direction.ASC.equals(direction)) {
+                    directionType = Direction.ASC;
                 }
                 if (sort == null) {
                     sort = new Sort(directionType, strings);
@@ -188,7 +188,6 @@ public class QueryUtils {
                             }
                             break;
                     }
-
                     if ("or".equalsIgnoreCase(queryParam.getConnector())) {
                         predicateRecord = cb.or(predicateRecord);
                         orPredicates.add(predicateRecord);
@@ -196,7 +195,6 @@ public class QueryUtils {
                         andPredicates.add(predicateRecord);
                     }
                 }
-
                 Predicate and = cb.and(andPredicates.toArray(new Predicate[andPredicates.size()]));
                 Predicate or = cb.or(orPredicates.toArray(new Predicate[orPredicates.size()]));
                 if (or.getExpressions().isEmpty()) {
