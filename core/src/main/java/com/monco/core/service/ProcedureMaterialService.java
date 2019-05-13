@@ -1,6 +1,9 @@
 package com.monco.core.service;
 
+import com.monco.core.entity.Material;
 import com.monco.core.entity.ProcedureMaterial;
+
+import java.util.List;
 
 /**
  * @Auther: monco
@@ -9,4 +12,11 @@ import com.monco.core.entity.ProcedureMaterial;
  */
 public interface ProcedureMaterialService extends BaseService<ProcedureMaterial, Long> {
 
+    /**
+     * 根据工序id 获得工序原料集合
+     *
+     * @param procedureId
+     * @return
+     */
+    List<ProcedureMaterial> getProcedureMaterial(Long procedureId);
 }

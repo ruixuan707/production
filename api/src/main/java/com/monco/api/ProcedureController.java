@@ -15,7 +15,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -66,6 +68,19 @@ public class ProcedureController {
     public ApiResult list(@RequestParam(value = "currentPage", defaultValue = "1") Integer currentPage,
                           @RequestParam(value = "pageSize", defaultValue = "20") Integer pageSize,
                           ProcedurePage procedurePage, OrderQuery orderQuery) {
+        if (pageSize == 0) {
+            Procedure procedure = new Procedure();
+            procedure.setDataDelete(ConstantUtils.UN_DELETE);
+            Example<Procedure> procedureExample = Example.of(procedure);
+            List<Procedure> procedureList = procedureService.findAll(procedureExample, Sort.by("id"));
+            List<ProcedurePage> procedurePageList = new ArrayList<>();
+            for (Procedure entity : procedureList) {
+                ProcedurePage page = new ProcedurePage();
+                entityToPage(entity, page);
+                procedurePageList.add(page);
+            }
+            return ApiResult.ok(procedurePageList);
+        }
         List<QueryParam> params = new ArrayList<>();
         QueryParam queryParam = new QueryParam("dataDelete", MatchType.equal, ConstantUtils.UN_DELETE);
         params.add(queryParam);

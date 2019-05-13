@@ -2,18 +2,17 @@ package com.monco.core.page;
 
 import lombok.Data;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 /**
  * @Auther: monco
- * @Date: 2019/5/12 21:45
+ * @Date: 2019/5/13 16:34
  * @Description:
  */
 @Data
-public class ProductPage extends BasePage {
+public class PreProductPage extends BasePage {
 
-    private static final long serialVersionUID = 6047115847278129170L;
+    private static final long serialVersionUID = -3612973491004174067L;
 
     /**
      * 产品名称
@@ -26,24 +25,14 @@ public class ProductPage extends BasePage {
     private Integer productType;
 
     /**
-     * 价格
-     */
-    private BigDecimal price;
-
-    /**
-     * 产品等级
+     * 材料类型
      */
     private String productLevel;
 
     /**
-     * 产品规格
+     * 材料规格
      */
     private String productNorms;
-
-    /**
-     * 批次号
-     */
-    private String productBatch;
 
     /**
      * 生产数量
@@ -53,7 +42,7 @@ public class ProductPage extends BasePage {
     /**
      * 绑定工序
      */
-    private Long[] procedureIds;
+    private Long[] procedure;
 
     /**
      * 工序名称
@@ -64,4 +53,9 @@ public class ProductPage extends BasePage {
      * 工序步骤
      */
     private Integer procedureStep;
+
+    /**
+     * 生产工序
+     */
+    private Long buildProcedure;
 }
