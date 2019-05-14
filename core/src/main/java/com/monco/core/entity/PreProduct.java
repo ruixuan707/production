@@ -21,6 +21,11 @@ public class PreProduct extends BaseEntity<Long> {
     private static final long serialVersionUID = 7152395154953998506L;
 
     /**
+     * 产品id
+     */
+    private Long productId;
+
+    /**
      * 产品名称
      */
     private String productName;

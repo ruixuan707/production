@@ -128,5 +128,8 @@ public class ProductController {
         if (product.getProcedureStep() == null) {
             product.setProcedureStep(ConstantUtils.NUM_1);
         }
+        if (productPage.getNumber() == null && productPage.getId() == null) {
+            product.setNumber(0L);
+        }
     }
 }

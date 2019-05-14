@@ -42,7 +42,7 @@ public class MaterialController {
      */
     @PostMapping
     public ApiResult save(@RequestBody Material material) {
-        if (material.getNumber() == null) {
+        if (material.getId() == null && material.getNumber() == null) {
             material.setNumber(0L);
         }
         materialService.save(material);

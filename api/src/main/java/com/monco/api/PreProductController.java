@@ -15,6 +15,7 @@ import com.monco.core.query.OrderQuery;
 import com.monco.core.query.QueryParam;
 import com.monco.core.service.PreProductService;
 import com.monco.core.service.ProcedureService;
+import com.monco.core.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -42,10 +43,40 @@ public class PreProductController {
     @Autowired
     ProcedureService procedureService;
 
+    @Autowired
+    ProductService productService;
+
     @PostMapping
     public ApiResult save(@RequestBody PreProductPage preProductPage) {
         PreProduct preProduct = new PreProduct();
         pageToEntity(preProductPage, preProduct);
+        // 如果半成品id不为空 则将产品id赋值
+        if (preProduct.getId() != null) {
+            preProduct.setProductId(preProductService.find(preProduct.getId()).getProductId());
+            preProduct.setProcedureStep(preProductService.find(preProduct.getId()).getProcedureStep());
+        }
+        if (preProduct.getId() != null) {
+            preProduct.setProcedureStep(preProduct.getProcedureStep() + 1);
+        }
+        boolean result = preProductService.buildPreProduct(preProduct);
+        if (result) {
+            return ApiResult.ok();
+        } else {
+            return ApiResult.error("原材料不足");
+        }
+    }
+
+    @PostMapping("build")
+    public ApiResult build(@RequestBody PreProductPage preProductPage) {
+        PreProduct preProduct = new PreProduct();
+        pageToEntity(preProductPage, preProduct);
+        // 如果半成品id不为空 则将产品id赋值
+        if (preProduct.getId() != null) {
+            preProduct.setProductId(preProductService.find(preProduct.getId()).getProductId());
+        }
+        if (preProduct.getId() != null) {
+            preProduct.setProcedureStep(preProduct.getProcedureStep() + 1);
+        }
         boolean result = preProductService.buildPreProduct(preProduct);
         if (result) {
             return ApiResult.ok();
@@ -78,6 +109,7 @@ public class PreProductController {
         preProductPage.setId(preProduct.getId());
         if (StringUtils.isNotBlank(preProduct.getProcedureIds())) {
             Long[] procedureIds = CommonUtils.string2Long(preProduct.getProcedureIds(), ",");
+            preProductPage.setProcedureIds(procedureIds);
             List<Procedure> procedureList = procedureService.findByIds(procedureIds);
             List<String> procedureNames = new ArrayList<>();
             for (Procedure procedure : procedureList) {
@@ -85,12 +117,28 @@ public class PreProductController {
             }
             preProductPage.setProcedureName(procedureNames);
         }
+        if (preProduct.getProductId() != null) {
+            Product product = productService.find(preProduct.getProductId());
+            preProductPage.setProductLevel(product.getProductLevel());
+            preProductPage.setProductNorms(product.getProductNorms());
+            preProductPage.setProductName(product.getProductName());
+            if (StringUtils.isNotBlank(product.getProcedureIds()) && product.getProcedureIds().contains(",")) {
+                Long[] procedure = CommonUtils.string2Long(product.getProcedureIds(), ",");
+                Integer procedureStep = preProduct.getProcedureStep();
+                if (procedureStep < procedure.length) {
+                    Long procedureId = procedure[procedureStep];
+                    Procedure nextProcedure = procedureService.find(procedureId);
+                    preProductPage.setNextProcedure(nextProcedure.getProcedureName());
+                }
+            }
+        }
     }
 
     public void pageToEntity(PreProductPage preProductPage, PreProduct preProduct) {
         BeanUtils.copyProperties(preProductPage, preProduct);
-        if (ArrayUtils.isNotEmpty(preProductPage.getProcedure())) {
-            preProduct.setProcedureIds(CommonUtils.LongArray2String(preProductPage.getProcedure()));
+        preProduct.setId(preProductPage.getId());
+        if (ArrayUtils.isNotEmpty(preProductPage.getProcedureIds())) {
+            preProduct.setProcedureIds(CommonUtils.LongArray2String(preProductPage.getProcedureIds()));
         }
         if (preProduct.getProcedureStep() == null) {
             preProduct.setProcedureStep(ConstantUtils.NUM_1);

@@ -15,6 +15,11 @@ public class PreProductPage extends BasePage {
     private static final long serialVersionUID = -3612973491004174067L;
 
     /**
+     * 产品id
+     */
+    private Long productId;
+
+    /**
      * 产品名称
      */
     private String productName;
@@ -42,7 +47,7 @@ public class PreProductPage extends BasePage {
     /**
      * 绑定工序
      */
-    private Long[] procedure;
+    private Long[] procedureIds;
 
     /**
      * 工序名称
@@ -55,7 +60,12 @@ public class PreProductPage extends BasePage {
     private Integer procedureStep;
 
     /**
-     * 生产工序
+     * 工序
      */
     private Long buildProcedure;
+
+    /**
+     * 下一道工序名字
+     */
+    private String nextProcedure;
 }
