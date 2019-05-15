@@ -15,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,5 +68,20 @@ public class ProcedureServiceImpl extends BaseServiceImpl<Procedure, Long> imple
             materialList.add(material);
         }
         return materialList;
+    }
+
+    @Override
+    public BigDecimal getProcedureValue(Long[] ids) {
+        List<Procedure> procedureList = this.findByIds(ids);
+        BigDecimal totalValue = BigDecimal.ZERO;
+        for (Procedure procedure : procedureList) {
+            BigDecimal materialValue = BigDecimal.ZERO;
+            List<Material> materialList = this.getMaterialList(procedure.getId());
+            for (Material material : materialList) {
+                materialValue = materialValue.add(material.getPrice());
+            }
+            totalValue = totalValue.add(materialValue);
+        }
+        return totalValue;
     }
 }

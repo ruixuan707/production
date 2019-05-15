@@ -33,4 +33,9 @@ public class Business extends BaseEntity<Long> {
      * 商家电话号码
      */
     private String businessPhoneNo;
+
+    /**
+     * 商家类型 0 供应商 1 销售商
+     */
+    private Integer businessType;
 }

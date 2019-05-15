@@ -4,6 +4,7 @@ import com.monco.core.entity.Material;
 import com.monco.core.entity.Procedure;
 import com.monco.core.entity.ProcedureMaterial;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -28,4 +29,11 @@ public interface ProcedureService extends BaseService<Procedure, Long> {
      * @return
      */
     List<Material> getMaterialList(Long procedureId);
+
+    /**
+     * 计算n道工序的总价
+     * @param ids
+     * @return
+     */
+    BigDecimal getProcedureValue(Long[] ids);
 }

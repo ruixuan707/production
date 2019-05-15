@@ -58,13 +58,16 @@ public class BusinessController {
                           Business business, OrderQuery orderQuery) {
         if (pageSize == 0) {
             Business validate = new Business();
+            if (business.getBusinessType() != null) {
+                validate.setBusinessType(business.getBusinessType());
+            }
             validate.setDataDelete(ConstantUtils.UN_DELETE);
             Example<Business> businessExample = Example.of(validate);
             List<Business> businessList = businessService.findAll(businessExample, Sort.by("id"));
             return ApiResult.ok(businessList);
         }
-
         List<QueryParam> params = new ArrayList<>();
+        // 删除状态
         QueryParam queryParam = new QueryParam("dataDelete", MatchType.equal, ConstantUtils.UN_DELETE);
         params.add(queryParam);
         // 商家名称
@@ -80,6 +83,11 @@ public class BusinessController {
         // 商家联系方式
         if (StringUtils.isNotBlank(business.getBusinessPhoneNo())) {
             queryParam = new QueryParam("businessPhoneNo", MatchType.equal, business.getBusinessPhoneNo());
+            params.add(queryParam);
+        }
+        // 商家类型
+        if (business.getBusinessType() != null) {
+            queryParam = new QueryParam("businessType", MatchType.equal, business.getBusinessType());
             params.add(queryParam);
         }
         Page<Business> result = businessService.findPage(pageSize, currentPage, params, orderQuery.getOrderType(), orderQuery.getOrderField());

@@ -57,7 +57,7 @@ public class PreProductServiceImpl extends BaseServiceImpl<PreProduct, Long> imp
         if (StringUtils.isNotBlank(procedureIdString) && !procedureIdString.contains(",")) {
             buildProcedure = Long.valueOf(procedureIdString);
             product.setNumber(preProduct.getNumber() + product.getNumber());
-            preProduct.setDataDelete(ConstantUtils.DELETE);
+            end = true;
         }
         if (StringUtils.isNotBlank(procedureIdString) && procedureIdString.contains(",")) {
             Long[] procedureIds = CommonUtils.string2Long(procedureIdString, ",");
@@ -84,8 +84,6 @@ public class PreProductServiceImpl extends BaseServiceImpl<PreProduct, Long> imp
             return true;
         }
         return false;
-
-
     }
 
     @Override
