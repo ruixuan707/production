@@ -92,6 +92,8 @@ public class PreProductController {
         List<QueryParam> params = new ArrayList<>();
         QueryParam queryParam = new QueryParam("dataDelete", MatchType.equal, ConstantUtils.UN_DELETE);
         params.add(queryParam);
+        queryParam = new QueryParam("number", MatchType.notEqual, ConstantUtils.NUM_0);
+        params.add(queryParam);
         Page<PreProduct> result = preProductService.findPage(pageSize, currentPage, params, orderQuery.getOrderType(), orderQuery.getOrderField());
         List<PreProduct> preProductList = result.getContent();
         List<PreProductPage> preProductPageList = new ArrayList<>();
