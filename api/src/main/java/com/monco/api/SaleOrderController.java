@@ -21,7 +21,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -81,6 +83,19 @@ public class SaleOrderController {
     public ApiResult list(@RequestParam(value = "currentPage", defaultValue = "1") Integer currentPage,
                           @RequestParam(value = "pageSize", defaultValue = "20") Integer pageSize,
                           SaleOrderPage saleOrderPage, OrderQuery orderQuery) {
+        if (pageSize == 0) {
+            SaleOrder saleOrder = new SaleOrder();
+            saleOrder.setDataDelete(ConstantUtils.UN_DELETE);
+            Example<SaleOrder> saleOrderExample = Example.of(saleOrder);
+            List<SaleOrder> saleOrderList = saleOrderService.findAll(saleOrderExample, Sort.by("id"));
+            List<SaleOrderPage> saleOrderPageList = new ArrayList<>();
+            for (SaleOrder entity : saleOrderList) {
+                SaleOrderPage page = new SaleOrderPage();
+                entityToPage(entity, page);
+                saleOrderPageList.add(page);
+            }
+            return ApiResult.ok(saleOrderPageList);
+        }
         List<QueryParam> params = new ArrayList<>();
         QueryParam queryParam = new QueryParam("dataDelete", MatchType.equal, ConstantUtils.UN_DELETE);
         params.add(queryParam);

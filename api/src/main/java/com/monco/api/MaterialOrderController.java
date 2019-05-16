@@ -13,7 +13,9 @@ import com.monco.core.service.MaterialService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -59,16 +61,22 @@ public class MaterialOrderController {
     public ApiResult list(@RequestParam(value = "currentPage", defaultValue = "1") Integer currentPage,
                           @RequestParam(value = "pageSize", defaultValue = "20") Integer pageSize,
                           MaterialOrder materialOrder, OrderQuery orderQuery) {
+        if (pageSize == 0) {
+            MaterialOrder validate = new MaterialOrder();
+            validate.setDataDelete(ConstantUtils.UN_DELETE);
+            Example<MaterialOrder> materialExample = Example.of(validate);
+            return ApiResult.ok(materialOrderService.findAll(materialExample, Sort.by("id")));
+        }
         List<QueryParam> params = new ArrayList<>();
         QueryParam queryParam = new QueryParam("dataDelete", MatchType.equal, ConstantUtils.UN_DELETE);
         params.add(queryParam);
         // 订单号
-        if(StringUtils.isNotBlank(materialOrder.getOrderNo())){
+        if (StringUtils.isNotBlank(materialOrder.getOrderNo())) {
             queryParam.setFiled("orderNo").setMatchType(MatchType.like).setValue(materialOrder.getOrderNo());
             params.add(queryParam);
         }
         // 商家名称
-        if(StringUtils.isNotBlank(materialOrder.getBusinessName())){
+        if (StringUtils.isNotBlank(materialOrder.getBusinessName())) {
             queryParam.setFiled("businessName").setMatchType(MatchType.like).setValue(materialOrder.getBusinessName());
             params.add(queryParam);
         }
